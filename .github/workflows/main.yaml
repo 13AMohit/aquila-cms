@@ -1,0 +1,40 @@
+name: Terraform workflow
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    name: Terraform Actions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        id: config-aws-creds
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/${{ vars.AWS_ASSUME_ROLE }}
+          aws-region: us-east-1
+          role-session-name: CICDsession
+          mask-aws-account-id: 'no'
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.0
+          
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan --var-file="dev.tfvars"
+
+      - name: Terraform Apply
+        run: terraform apply --var-file="dev.tfvars" -auto-approve
+
+      - name: copy state file
+        run: aws s3 cp *.tfstate s3://mohit-terraform-bucket/${{ github.event.inputs.environment }}/
