@@ -1,0 +1,20 @@
+vpc_cidr         = "172.20.0.0/20"
+public_cidr      = "172.20.1.0/24"
+public2_cidr     = "172.20.2.0/24"
+private_app_cidr = "172.20.3.0/24"
+private_db_cidr  = "172.20.4.0/24"
+vpc_az           = "ap-south-1a"
+vpc_az2          = "ap-south-1b"
+
+
+tg_name = "mern-tg"
+lb_name = "mern-lb"
+
+ami_id             = "ami-05e00961530ae1b55"
+instance_type      = "t2.micro"
+web-server_script  = "web-server.sh"
+app-server_script  = "app-server.sh"
+db-server_script   = "db-server.sh"
+ec2_webserver_name = "Web-server"
+ec2_appserver_name = "App-server"
+ec2_dbserver_name  = "DB-server"
